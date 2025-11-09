@@ -1,0 +1,80 @@
+openapi: 3.0.1
+info:
+  title: Doctor Scheduling Service API
+  description: API documentation for the Doctor Scheduling Service.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8083/api
+    description: Local development server
+paths:
+  /doctors:
+    get:
+      summary: Get all doctors
+      description: Retrieve a list of all doctors.
+      responses:
+        '200':
+          description: A list of doctors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+  /doctors/department/{department}:
+    get:
+      summary: Get doctors by department
+      description: Retrieve a list of doctors filtered by department.
+      parameters:
+        - name: department
+          in: path
+          required: true
+          description: The department to filter doctors by.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of doctors in the specified department.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+  /doctors/{doctorId}/availability:
+    get:
+      summary: Check slot availability
+      description: Check if a specific slot is available for a doctor.
+      parameters:
+        - name: doctorId
+          in: path
+          required: true
+          description: The ID of the doctor.
+          schema:
+            type: integer
+        - name: slot
+          in: query
+          required: true
+          description: The slot to check availability for.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Slot availability status.
+          content:
+            application/json:
+              schema:
+                type: boolean
+components:
+  schemas:
+    Doctor:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the doctor.
+        name:
+          type: string
+          description: The name of the doctor.
+        department:
+          type: string
+          description: The department the doctor belongs to.
